@@ -13,14 +13,18 @@ async function checkRequirements(userId: number) {
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
   if (!ticket) {
     throw notFoundError();
+  } else if (
+    ticket.status !== 'PAID' ||
+    ticket.TicketType.isRemote === true ||
+    ticket.TicketType.includesHotel === false
+  ) {
+    throw PaymentRequired();
   }
 
   const hotels = await hotelsRepository.getHotels();
   if (hotels.length === 0) {
     throw notFoundError();
   }
-  if (ticket.status !== 'PAID' || ticket.TicketType.isRemote === true || ticket.TicketType.includesHotel === false)
-    throw PaymentRequired();
 
   if (hotels.length > 0) return hotels;
 }
@@ -38,7 +42,6 @@ async function getHotelById(userId: number, hotelId: number) {
   if (!hotel) {
     throw notFoundError();
   }
-  console.log(hotel);
   return hotel;
 }
 

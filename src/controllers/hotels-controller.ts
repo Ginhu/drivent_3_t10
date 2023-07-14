@@ -39,7 +39,6 @@ export async function getHotelById(req: AuthenticatedRequest, res: Response) {
     } else if (error.name === 'NotFoundError') {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
-    console.log(error);
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
